@@ -1,0 +1,9 @@
+{
+  "main_button_week": "Расписание на неделю",
+  "main_button_day": "Расписание по дням",
+  "main_button_support_roadmap": "Тех. поддержка и Roadmap",
+  "main_button_donate": "Поддержать автора",
+  "days_of_week": ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Cуббота"],
+  "current_week": "Текущая неделя",
+  "next_week": "Следующая неделя"
+}

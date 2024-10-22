@@ -1,0 +1,2 @@
+from configs.config import answer_text_config
+print(answer_text_config.__dict__)
