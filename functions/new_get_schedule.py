@@ -4,15 +4,30 @@ from functions.parse_schedule import parse_schedule
 
 class WeekSchedule:
     def __init__(self, url):
-        self.even = EvenNotEvenWeekSchedule(url, even=True)
-        self.not_even = EvenNotEvenWeekSchedule(url, even=False)
+        self.schedule = parse_schedule(url)
+        self.even = EvenNotEvenWeekSchedule(self.schedule, even=True)
+        self.not_even = EvenNotEvenWeekSchedule(self.schedule, even=False)
+
     def __str__(self):
         return f'even: {self.even} \n not_even: {self.not_even}'
 
+    def show(self, current: bool):
+        if self.schedule:
+            is_even = 'чёт'
+        else:
+            is_even = 'нечёт'
+        if current:
+            week_value = self.schedule["is_even"]
+        else:
+            week_value = not self.schedule["is_even"]
+        if week_value:
+            return f'Расписание на эту неделю({is_even}:\n\n{self.even}'
+        else:
+            return f'Расписание на эту неделю({is_even}:\n\n{self.not_even}'
 
 class EvenNotEvenWeekSchedule:
-    def __init__(self, url, even):
-        schedule = parse_schedule(url)['schedule']
+    def __init__(self, schedule, even):
+        schedule = schedule['schedule']
         self.monday = DaySchedule(schedule, day='monday', even=even)
         self.tuesday = DaySchedule(schedule, day='tuesday', even=even)
         self.wednesday = DaySchedule(schedule, day='wednesday', even=even)
@@ -22,6 +37,10 @@ class EvenNotEvenWeekSchedule:
 
     def __str__(self):
         return f'monday: {self.monday} \n tuesday: {self.tuesday} \n wednesday: {self.wednesday} \n thursday: {self.thursday} \n friday: {self.friday} \n saturday: {self.saturday} \n'
+
+    def show(self):
+        return f'{self.monday}{self.tuesday}{self.wednesday}{self.thursday}{self.friday}{self.saturday}'
+
 
 class DaySchedule:
     def __init__(self, schedule, day, even):

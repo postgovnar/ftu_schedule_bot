@@ -3,6 +3,7 @@ from telebot import types
 from configs.config import main_send_text_config, main_answer_text_config, register_answer_text_config, register_send_text_config
 from database.data_base_functions import *
 from functions.get_schedule import get_week_schedule
+from functions.new_get_schedule import WeekSchedule
 
 
 def bot_app(token: str):
@@ -96,15 +97,15 @@ def bot_app(token: str):
             bot.send_message(message.from_user.id, 'функция не готова')
 
     def week_schedule(message, current: bool):
-        schedule = get_week_schedule(message.from_user.id, current)
-
+        schedule = WeekSchedule(get_group_url_by_id(message.from_user.id))
         markup = types.ReplyKeyboardMarkup()
         markup.row(types.KeyboardButton(main_answer_text_config.main_button_day))
         markup.row(types.KeyboardButton(main_answer_text_config.main_button_week))
         markup.row(types.KeyboardButton(main_answer_text_config.main_button_support_roadmap))
         markup.row(types.KeyboardButton(main_answer_text_config.main_button_donate))
-        print(schedule)
-        bot.send_message(message.from_user.id, 'fdfdf', reply_markup=markup)
+
+
+        bot.send_message(message.from_user.id, schedule.show(current) , reply_markup=markup)
 
 
     # def day_schedule(message):
