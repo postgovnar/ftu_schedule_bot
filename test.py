@@ -1,2 +1,2 @@
-from configs.config import answer_text_config
-print(answer_text_config.__dict__)
+a = [('ЛПб-ЛД-24-1',)]
+print(a[0][0])

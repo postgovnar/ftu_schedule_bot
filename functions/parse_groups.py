@@ -12,7 +12,6 @@ def parse_groups():
             return False
         return True
 
-
     def text_from_html(body):
         soup = BeautifulSoup(body, 'html.parser')
         texts = soup.findAll(string=True)

@@ -14,6 +14,7 @@ def get_group_names():
 
     return group_names
 
+
 def get_group_url(group_name):
     connection = sqlite3.connect(db_path())
     cursor = connection.cursor()
@@ -33,7 +34,6 @@ def get_group_url_by_id(user_id):
     cursor.execute(f'''
                     SELECT USER_GROUP FROM USERS WHERE USER_ID = '{user_id}'
                     ''')
-
     user_group = cursor.fetchall()[0][0]
     connection.close()
 
@@ -62,5 +62,3 @@ def add_group(group_name, group_url):
                     ''')
     connection.commit()
     connection.close()
-
-print(get_group_url_by_id(760172191))

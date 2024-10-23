@@ -63,4 +63,3 @@ def parse_schedule(group_url):
         "group": group,
         "schedule": week_schedule
     }
-print(parse_schedule("https://eios.spbftu.ru/rasp/Rasp.aspx?group=17377&sem=1"))
