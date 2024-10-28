@@ -1,6 +1,8 @@
 import sqlite3
 from configs.config import config
 from configs.config import db_path
+
+
 def get_group_names():
     connection = sqlite3.connect(db_path())
     cursor = connection.cursor()
@@ -28,6 +30,7 @@ def get_group_url(group_name):
 
     return group_url[0][0]
 
+
 def get_group_url_by_id(user_id):
     connection = sqlite3.connect(db_path())
     cursor = connection.cursor()
@@ -52,6 +55,7 @@ def add_user(user_data):
     connection.commit()
     connection.close()
 
+
 def add_group(group_name, group_url):
     connection = sqlite3.connect(db_path())
     cursor = connection.cursor()
@@ -62,3 +66,26 @@ def add_group(group_name, group_url):
                     ''')
     connection.commit()
     connection.close()
+
+
+def daily_messaging_users_id():
+    connection = sqlite3.connect(db_path())
+    cursor = connection.cursor()
+    cursor.execute(f'''
+                        SELECT USER_ID FROM USERS WHERE DAILY_MESSAGING = 1'
+                        ''')
+    users = cursor.fetchall()
+    connection.close()
+    return users
+
+
+def weekly_messaging_users_id():
+    connection = sqlite3.connect(db_path())
+    cursor = connection.cursor()
+    cursor.execute(f'''
+                        SELECT USER_ID FROM USERS WHERE WEEKLY_MESSAGING = 1'
+                        ''')
+    users = cursor.fetchall()
+    connection.close()
+    return users
+

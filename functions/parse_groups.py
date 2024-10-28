@@ -29,8 +29,9 @@ def parse_groups():
     cnt = 0
     temp = []
     b = []
-    for i in range(16587, 18000):
-        if i % 100 == 0: print(i)
+    for i in [17560, 17948, 17949, 18048, 18049, 18353, 18354, 18562, 18563, 18759]:
+        if i % 100 == 0:
+            print(i)
         try:
             group_url = f"https://eios.spbftu.ru/Rasp/Rasp.aspx?group={i}&sem=1"
             a = visible_webpage_text(group_url).split("  ")
@@ -38,15 +39,13 @@ def parse_groups():
             a = a[a.index('Группа:') + 1:]
             group = a[0].split(" ")[1]
             if group != 'Ссылка':
-                # add_group(group, f"https://eios.spbftu.ru/Rasp/Rasp.aspx?group={i}&sem=1")
-                b.append([group, group_url])
+                add_group(group, f"https://eios.spbftu.ru/Rasp/Rasp.aspx?group={i}&sem=1")
                 cnt += 1
-                print(f"Групп добавлено {cnt}")
+                print(f"Групп добавлено {cnt} {group}")
         except Exception as e:
             print(e)
             temp.append(i)
+
     print(temp)
-    for i in b:
-        add_group(i[0], i[1])
 
 parse_groups()

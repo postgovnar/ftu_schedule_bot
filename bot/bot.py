@@ -1,12 +1,10 @@
-import telebot
 from telebot import types
 from configs.config import main_send_text_config, main_answer_text_config, register_answer_text_config, register_send_text_config
 from database.data_base_functions import *
 from functions.get_schedule import WeekSchedule
 
 
-def bot_app(token: str):
-    bot = telebot.TeleBot(token)
+def bot_app(bot):
     print('я живой')
 
     @bot.message_handler(commands=['start'])
@@ -132,7 +130,7 @@ def bot_app(token: str):
     def error(message):
         bot.send_message(message.from_user.id, main_send_text_config.error_message)
 
-    bot.polling(non_stop=True, interval=0)
+    bot.infinity_polling(timeout=10, long_polling_timeout = 5)
 
 
 
