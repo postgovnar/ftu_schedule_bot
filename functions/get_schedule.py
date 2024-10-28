@@ -19,18 +19,14 @@ class WeekSchedule:
     def show(self, current: bool):
         if self.ex:
             return "Проблема с подключением к сайту вуза, попробуйте еще раз позже"
-        if self.schedule:
-            is_even = 'чёт'
-        else:
-            is_even = 'нечёт'
         if current:
             week_value = self.schedule["is_even"]
         else:
             week_value = not self.schedule["is_even"]
         if week_value:
-            return f'*Расписание на эту неделю({is_even}):*\n\n{self.even.show()}'
+            return f'*Расписание на неделю({'чёт'}):*\n\n{self.even.show()}'
         else:
-            return f'*Расписание на эту неделю({is_even}):*\n\n{self.not_even.show()}'
+            return f'*Расписание на неделю({'нечёт'}):*\n\n{self.not_even.show()}'
 
 
 class EvenNotEvenWeekSchedule:
