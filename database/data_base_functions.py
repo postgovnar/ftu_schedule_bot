@@ -116,9 +116,11 @@ def get_users_id():
     connection = sqlite3.connect(db_path())
     cursor = connection.cursor()
     cursor.execute(f'''
-                        SELECT USER_ID FROM USERS'
+                        SELECT USER_ID FROM USERS
                         ''')
     users = cursor.fetchall()
     connection.close()
-    return users
+    return [x[0] for x in users]
 
+
+print(get_users_id())

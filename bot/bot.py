@@ -132,14 +132,14 @@ def bot_app(bot):
 
     @bot.message_handler(commands=['admin'])
     def admin(message):
-        if not message.from_user.id == 760172191:
-            pass
+        if not message.from_user.id == "760172191":
+            error(message)
         bot.send_message(760172191, f'Количество пользователей: {len(get_users_id())}')
 
     @bot.message_handler(commands=['end'])
     def end(message):
-        if not message.from_user.id == 760172191:
-            pass
+        if not message.from_user.id == "760172191":
+            error(message)
         bot_stop_alert(bot)
         sys.exit()
 
