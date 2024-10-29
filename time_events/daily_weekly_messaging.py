@@ -39,7 +39,7 @@ def daily_messaging(bot):
 
 
 def weekly_messaging(bot):
-    users_id = daily_messaging_users_id()
+    users_id = weekly_messaging_users_id()
     for user_id in users_id:
         schedule = WeekSchedule(get_group_url_by_id(user_id))
         current = schedule.schedule['is_even']

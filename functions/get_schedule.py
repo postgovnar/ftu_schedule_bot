@@ -104,8 +104,6 @@ class DaySchedule:
             return day_schedule
 
 
-
-
 class Class:
     def __init__(self, schedule, even, number):
         self.number = None
@@ -130,7 +128,7 @@ class Class:
 
         def load_merged_class(raw_class_, raw_class_2):
             raw_class_ = raw_class_.split(' ')
-            raw_class_2 =  raw_class_2.split(' ')
+            raw_class_2 = raw_class_2.split(' ')
 
             if not ('ауд.' in raw_class_):
                 raw_class_.insert(-2, 'ауд.')
@@ -153,6 +151,9 @@ class Class:
             if not ('ауд.' in raw_class_):
                 raw_class_.insert(-2, 'ауд.')
                 raw_class_.insert(-2, '-')
+            if not raw_class_[0].isnumeric():
+                for i in range(4):
+                    raw_class_.insert(0, "Костыль")
             self.number = number
             self.time = time_table[str(number)]
             self.name = ' '.join(raw_class_[4:raw_class_.index('ауд.') - 3])

@@ -1,5 +1,4 @@
 import sqlite3
-from configs.config import config
 from configs.config import db_path
 
 
@@ -8,6 +7,20 @@ def get_group_names():
     cursor = connection.cursor()
     cursor.execute('''
             SELECT GROUP_NAME, GROUP_URL FROM GROUPS
+            ''')
+
+    group_names = [i[0] for i in cursor.fetchall()]
+
+    connection.close()
+
+    return group_names
+
+
+def get_lower_group_names():
+    connection = sqlite3.connect(db_path())
+    cursor = connection.cursor()
+    cursor.execute('''
+            SELECT LOWERCASE_GROUP_NAME, GROUP_NAME, GROUP_URL FROM GROUPS
             ''')
 
     group_names = [i[0] for i in cursor.fetchall()]
@@ -46,10 +59,19 @@ def get_group_url_by_id(user_id):
 def add_user(user_data):
     connection = sqlite3.connect(db_path())
     cursor = connection.cursor()
+    cursor.execute(f'''
+                SELECT GROUP_NAME FROM GROUPS WHERE LOWERCASE_GROUP_NAME = '{user_data['user_group']}'
+                ''')
+
+    group_name = cursor.fetchall()
+
+    connection.close()
+    connection = sqlite3.connect(db_path())
+    cursor = connection.cursor()
 
     cursor.execute(f'''
                 INSERT INTO USERS (USER_ID, USER_NAME, USER_GROUP, WEEKLY_MESSAGING, DAILY_MESSAGING) 
-                VALUES ('{user_data['user_id']}', '{user_data['user_name']}', '{user_data['user_group']}', 
+                VALUES ('{user_data['user_id']}', '{user_data['user_name']}', '{group_name}', 
                 '{user_data['weekly_messaging']}', '{user_data['daily_messaging']}');
                 ''')
     connection.commit()
@@ -61,8 +83,8 @@ def add_group(group_name, group_url):
     cursor = connection.cursor()
 
     cursor.execute(f'''
-                    INSERT INTO GROUPS (GROUP_NAME, GROUP_URL) 
-                    VALUES ('{group_name}', '{group_url}');
+                    INSERT INTO GROUPS (GROUP_NAME, GROUP_URL, LOWERCASE_GROUP_NAME) 
+                    VALUES ('{group_name}', '{group_url}', '{group_name.lower()}');
                     ''')
     connection.commit()
     connection.close()
@@ -84,6 +106,17 @@ def weekly_messaging_users_id():
     cursor = connection.cursor()
     cursor.execute(f'''
                         SELECT USER_ID FROM USERS WHERE WEEKLY_MESSAGING = 1'
+                        ''')
+    users = cursor.fetchall()
+    connection.close()
+    return users
+
+
+def get_users_id():
+    connection = sqlite3.connect(db_path())
+    cursor = connection.cursor()
+    cursor.execute(f'''
+                        SELECT USER_ID FROM USERS'
                         ''')
     users = cursor.fetchall()
     connection.close()

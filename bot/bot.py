@@ -2,23 +2,23 @@ from telebot import types
 from configs.config import main_send_text_config, main_answer_text_config, register_answer_text_config, register_send_text_config
 from database.data_base_functions import *
 from functions.get_schedule import WeekSchedule
+from bot_alerts import bot_stop_alert
+import sys
 
 
 def bot_app(bot):
-    print('я живой')
-
     @bot.message_handler(commands=['start'])
     def start(message):
         bot.reply_to(message, register_send_text_config.start_message_0)
         bot.send_message(message.chat.id, register_send_text_config.start_message_1)
         bot.send_message(message.chat.id, register_send_text_config.group_add_hint)
 
-    @bot.message_handler(func= lambda message: message.text in get_group_names())
+    @bot.message_handler(func=lambda message: message.text.lower() in get_group_names())
     def register_user_start(message):
         user_data = {
             'user_id': message.from_user.id,
             'user_name': message.from_user.username,
-            'user_group': message.text,
+            'user_group': message.text.lower(),
             'weekly_messaging': None,
             'daily_messaging': None
         }
@@ -130,7 +130,20 @@ def bot_app(bot):
     def error(message):
         bot.send_message(message.from_user.id, main_send_text_config.error_message)
 
-    bot.infinity_polling(timeout=10, long_polling_timeout = 5)
+    @bot.message_handler(commands=['admin'])
+    def admin(message):
+        if not message.from_user.id == 760172191:
+            pass
+        bot.send_message(760172191, f'Количество пользователей: {len(get_users_id())}')
+
+    @bot.message_handler(commands=['end'])
+    def end(message):
+        if not message.from_user.id == 760172191:
+            pass
+        bot_stop_alert(bot)
+        sys.exit()
+
+    bot.infinity_polling(timeout=10, long_polling_timeout=5)
 
 
 

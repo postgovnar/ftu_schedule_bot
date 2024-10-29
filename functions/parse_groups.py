@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 import requests
 from database.data_base_functions import add_group
+from datetime import date
 
 
 def parse_groups():
@@ -18,34 +19,43 @@ def parse_groups():
         visible_texts = filter(tag_visible, texts)
         return u" ".join(t.strip() for t in visible_texts)
 
-
     def visible_webpage_text(url):
-        r = requests.get(url)
+        r = requests.get(url, timeout=50)
         if r.status_code != 200:
             raise Exception(r.status_code)
         r = r.text
         return text_from_html(r)
 
-    cnt = 0
     temp = []
-    b = []
-    for i in [17560, 17948, 17949, 18048, 18049, 18353, 18354, 18562, 18563, 18759]:
-        if i % 100 == 0:
-            print(i)
+    for i in range(15000, 21000):
+        current_date = date.today()
+        current_year = int(current_date.year)
+        if current_date.month >= 8:
+            sem = 1
+        else:
+            sem = 2
+
+        if sem == 1:
+            education_year = f'{current_year}-{current_year + 1}'
+        else:
+            education_year = f'{current_year - 1}-{current_year}'
+
         try:
-            group_url = f"https://eios.spbftu.ru/Rasp/Rasp.aspx?group={i}&sem=1"
+            group_url = f"https://eios.spbftu.ru/Rasp/Rasp.aspx?group={i}&sem={sem}"
             a = visible_webpage_text(group_url).split("  ")
             a = list(filter(None, a))
-            a = a[a.index('Группа:') + 1:]
-            group = a[0].split(" ")[1]
-            if group != 'Ссылка':
-                add_group(group, f"https://eios.spbftu.ru/Rasp/Rasp.aspx?group={i}&sem=1")
-                cnt += 1
-                print(f"Групп добавлено {cnt} {group}")
+            year = a[a.index('Учебный год:') + 1:]
+            year = year[0].split(" ")[0]
+            print(year)
+            group = a[a.index('Группа:') + 1:]
+            group = group[0].split(" ")[1]
+            if group != 'Ссылка' and year == education_year:
+                add_group(group, f"https://eios.spbftu.ru/Rasp/Rasp.aspx?group={i}&sem={sem}")
         except Exception as e:
             print(e)
             temp.append(i)
 
     print(temp)
+
 
 parse_groups()
