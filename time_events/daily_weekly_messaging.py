@@ -34,8 +34,11 @@ def daily_messaging(bot):
             }
         message = days.get(day)
         if message:
-            bot.send_message(users_id, main_send_text_config.daily_messaging, parse_mode="Markdown")
-            bot.send_message(users_id, message, parse_mode="Markdown")
+            try:
+                bot.send_message(users_id, main_send_text_config.daily_messaging, parse_mode="Markdown")
+                bot.send_message(users_id, message, parse_mode="Markdown")
+            except Exception as e:
+                print(e)
 
 
 def weekly_messaging(bot):
@@ -45,8 +48,11 @@ def weekly_messaging(bot):
         current = schedule.schedule['is_even']
         message = schedule.show(not current)
         if message:
-            bot.send_message(users_id, main_send_text_config.weekly_messaging, parse_mode="Markdown")
-            bot.send_message(users_id, message, parse_mode="Markdown")
+            try:
+                bot.send_message(users_id, main_send_text_config.weekly_messaging, parse_mode="Markdown")
+                bot.send_message(users_id, message, parse_mode="Markdown")
+            except Exception as e:
+                print(e)
 
 
 def wait_until_next_trigger(bot):

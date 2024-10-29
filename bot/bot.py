@@ -1,12 +1,24 @@
+import time
 from telebot import types
 from configs.config import main_send_text_config, main_answer_text_config, register_answer_text_config, register_send_text_config
 from database.data_base_functions import *
 from functions.get_schedule import WeekSchedule
-from bot_alerts import bot_stop_alert
 import sys
 
 
 def bot_app(bot):
+    @bot.message_handler(func=lambda message: message.text == '/admin')
+    def admin(message):
+        if not message.from_user.username == "pankratyev_dev":
+            error(message)
+        bot.send_message(760172191, f'Количество пользователей: {len(get_users_id())}')
+
+    @bot.message_handler(func=lambda message: message.text == '/end')
+    def end(message):
+        if not message.from_user.username == "pankratyev_dev":
+            error(message)
+        sys.exit()
+
     @bot.message_handler(commands=['start'])
     def start(message):
         bot.reply_to(message, register_send_text_config.start_message_0)
@@ -130,18 +142,6 @@ def bot_app(bot):
     def error(message):
         bot.send_message(message.from_user.id, main_send_text_config.error_message)
 
-    @bot.message_handler(commands=['admin'])
-    def admin(message):
-        if not message.from_user.id == "760172191":
-            error(message)
-        bot.send_message(760172191, f'Количество пользователей: {len(get_users_id())}')
-
-    @bot.message_handler(commands=['end'])
-    def end(message):
-        if not message.from_user.id == "760172191":
-            error(message)
-        bot_stop_alert(bot)
-        sys.exit()
 
     bot.infinity_polling(timeout=10, long_polling_timeout=5)
 
